@@ -16,6 +16,25 @@
 # HOCON will fall back to substituting environment variable:
 #mykey = ${JAVA_HOME}
 
+## Akka
+# https://www.playframework.com/documentation/latest/ScalaAkka#Configuration
+# https://www.playframework.com/documentation/latest/JavaAkka#Configuration
+# ~~~~~
+# Play uses Akka internally and exposes Akka Streams and actors in Websockets and
+# other streaming HTTP responses.
+akka {
+  # "akka.log-config-on-start" is extraordinarly useful because it log the complete
+  # configuration at INFO level, including defaults and overrides, so it s worth
+  # putting at the very top.
+  #
+  # Put the following in your conf/logback.xml file:
+  #
+  # <logger name="akka.actor" level="INFO" />
+  #
+  # And then uncomment this line to debug the configuration.
+  #
+  #log-config-on-start = true
+}
 
 ## Secret key
 # https://www.playframework.com/documentation/latest/ApplicationSecret
@@ -43,7 +62,6 @@ play.modules {
 
   # If there are any built-in modules that you want to disable, you can list them here.
   #disabled += ""
-  enabled += "org.flywaydb.play.PlayModule"
 }
 
 ## IDE
@@ -355,28 +373,4 @@ db {
   # You can turn on SQL logging for any datasource
   # https://www.playframework.com/documentation/latest/Highlights25#Logging-SQL-statements
   #default.logSql=true
-  notes = {
-  	driver = "org.postgresql.Driver"
-  	url = "jdbc:postgresql://localhost:5432/notes"
-    url=${?PSQL_URL}
-    username = "momajs@dm1n"
-    username=${?PSQL_USER}
-    password = "m0m@je"
-    password=${?PSQL_PASSWORD}
-
-    migration {
-        initOnMigrate = true
-        auto = true
-    }
-  }
-
-}
-
-play.mailer {
-    host = "smtp.gmail.com"
-    port = 465
-    ssl = yes
-    tls = yes
-    user="grigory.skovoroda.o.da@gmail.com"
-    password="Grigory00012"
 }
