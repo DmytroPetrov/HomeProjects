@@ -21,7 +21,11 @@ libraryDependencies ++= Seq(
   "org.flywaydb" % "flyway-core" % "6.1.4",
   "org.flywaydb" %% "flyway-play" % "6.0.0",
   "com.typesafe.play" %% "play-mailer" % "8.0.0",
-  "com.typesafe.play" %% "play-mailer-guice" % "8.0.0"
+  "com.typesafe.play" %% "play-mailer-guice" % "8.0.0",
+  "io.monix" %% "monix" % "3.2.2",
+  "com.github.t3hnar" %% "scala-bcrypt" % "4.1",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+  "org.scalamock" %% "scalamock" % "4.4.0" % Test,
 )
 
 swaggerDomainNameSpaces := Seq("model")

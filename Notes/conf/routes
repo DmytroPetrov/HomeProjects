@@ -13,6 +13,99 @@ GET     /message                    controllers.AsyncController.message
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
+# ======================================================================================================================
+# ================================================== A U T H ===========================================================
+# ======================================================================================================================
+
+###
+#tags:
+#- Auth
+#summary: Sign in
+#operationId: Signin
+#consumes: application/json
+#produces:
+#- text/plain
+#parameters:
+#- in: body
+#  description: dto for sign in
+#  name: AdminSignInDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.dtos.Credentials"
+#responses:
+#  '200':
+#    description: success
+#  '412':
+#    description: No json passed
+#  '417':
+#    description: Wrong Credentials
+#  '422':
+#    description: Wrong json passed
+#  '500':
+#    description: Internal server error
+###
+POST        /api/auth/signin        controllers.AuthController.signIn
+
+###
+#tags:
+#- Auth
+#summary: Sign out
+#operationId: Signout
+#produces:
+#- text/plain
+#responses:
+#  '200':
+#    description: success
+#  '500':
+#    description: Internal server error
+###
+DELETE      /api/auth/signout       controllers.AuthController.signOut
+
+###
+#tags:
+#- Auth
+#summary: Email confirmation
+#operationId: confirm
+#consumes: application/text
+#produces:
+#- application/text
+#responses:
+#  '200':
+#    description: Success
+#  '406':
+#   description: Token expired
+#  '500':
+#    description: Internal server error
+###
+GET         /api/auth/confirm_email/:token       controllers.AuthController.confirm(token)
+
+###
+#tags:
+#- Auth
+#summary: Sign up
+#operationId: signUp
+#consumes: application/json
+#produces:
+#- text/plain
+#parameters:
+#- in: body
+#  description: dto for sign up
+#  name: CreateUserDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.dtos.CreateUserDTO"
+#responses:
+#  '200':
+#    description: Success
+#  '409':
+#   description: User already exist
+#  '422':
+#    description: Wrong json passed
+#  '500':
+#    description: Internal server error
+###
+POST        /api/auth/signup        controllers.AuthController.signUp
+
 
 ### NoDocs ###
 GET           /docs/swagger-ui/*file                 controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)

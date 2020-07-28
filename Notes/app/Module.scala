@@ -1,7 +1,13 @@
 import com.google.inject.AbstractModule
 import java.time.Clock
 
-import services.{ApplicationTimer, AtomicCounter, Counter}
+import daos.{EmailTokenDAO, UserDAO}
+import daos.slick.{EmailTokenDAOImpl, UserDAOImpl}
+import monix.execution.Scheduler
+import services.helpers.{TimeHelper, TokenHelper}
+import services.helpers.impl.{RealTimeHelper, TokenHelperImpl}
+import services.impl.{AuthServiceImpl, EmailTokenServiceImpl, MailerServiceImpl, UserServiceImpl}
+import services.{ApplicationTimer, AtomicCounter, AuthService, Counter, EmailTokenService, MailerService, UserService}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -16,13 +22,23 @@ import services.{ApplicationTimer, AtomicCounter, Counter}
 class Module extends AbstractModule {
 
   override def configure() = {
+    bind(classOf[Scheduler]).toInstance(Scheduler.Implicits.global)
     // Use the system clock as the default implementation of Clock
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
+    bind(classOf[UserService]).to(classOf[UserServiceImpl])
+    bind(classOf[MailerService]).to(classOf[MailerServiceImpl])
+    bind(classOf[AuthService]).to(classOf[AuthServiceImpl])
+    bind(classOf[EmailTokenService]).to(classOf[EmailTokenServiceImpl])
     // Ask Guice to create an instance of ApplicationTimer when the
     // application starts.
     bind(classOf[ApplicationTimer]).asEagerSingleton()
+    bind(classOf[UserDAO]).to(classOf[UserDAOImpl])
+    bind(classOf[EmailTokenDAO]).to(classOf[EmailTokenDAOImpl])
+
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])
+    bind(classOf[TimeHelper]).to(classOf[RealTimeHelper])
+    bind(classOf[TokenHelper]).to(classOf[TokenHelperImpl])
   }
 
 }
