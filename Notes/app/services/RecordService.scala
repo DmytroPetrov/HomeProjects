@@ -2,20 +2,21 @@ package services
 
 import java.util.UUID
 
-import models.Record
+import models.{Record, User}
+import models.dtos.RecordDTO
+import monix.eval.Task
 import reactivemongo.api.commands.WriteResult
-
-import scala.concurrent.Future
 
 trait RecordService {
 
-  def create(record: Record): Future[WriteResult]
+  def getByUser(userId: Long): Task[Seq[Record]]
 
-  def getById(id: UUID): Future[Option[Record]]
+  def create(owner: User, recordDTO: RecordDTO): Task[WriteResult]
 
-  def getByUser: Future[Seq[Record]]
+  def getById(recordId: UUID): Task[Record]
 
-  def update(id: UUID, record: Record): Future[Option[Record]]
+  def update(currentUser: User, recordDTO: RecordDTO, recordId: UUID): Task[Boolean]
 
-  def delete(id: UUID): Future[Option[Record]]
+  def delete(currentUser: User, recordId: UUID): Task[Boolean]
+
 }

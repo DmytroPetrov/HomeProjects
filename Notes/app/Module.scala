@@ -1,8 +1,8 @@
 import com.google.inject.AbstractModule
 import java.time.Clock
 
-import daos.{EmailTokenDAO, UserDAO}
-import daos.slick.{EmailTokenDAOImpl, UserDAOImpl}
+import daos.{EmailTokenDAO, RecordDAO, UserDAO}
+import daos.slick.{EmailTokenDAOImpl, RecordDAOImpl, UserDAOImpl}
 import monix.execution.Scheduler
 import services.helpers.{TimeHelper, TokenHelper}
 import services.helpers.impl.{RealTimeHelper, TokenHelperImpl}
@@ -35,6 +35,7 @@ class Module extends AbstractModule {
     bind(classOf[ApplicationTimer]).asEagerSingleton()
     bind(classOf[UserDAO]).to(classOf[UserDAOImpl])
     bind(classOf[EmailTokenDAO]).to(classOf[EmailTokenDAOImpl])
+    bind(classOf[RecordDAO]).to(classOf[RecordDAOImpl])
 
     // Set AtomicCounter as the implementation for Counter.
     bind(classOf[Counter]).to(classOf[AtomicCounter])

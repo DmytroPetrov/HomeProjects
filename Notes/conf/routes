@@ -107,56 +107,133 @@ GET         /api/auth/confirm_email/:token       controllers.AuthController.conf
 POST        /api/auth/signup        controllers.AuthController.signUp
 
 # ======================================================================================================================
-# ================================================== A U T H ===========================================================
+# =================================================== R E C O R D ======================================================
 # ======================================================================================================================
 
 ###
 #tags:
 #- Record
-#summary: Create Record
-#operationId: RecordCreate
-#consumes: application/json
+#summary: Create record
+#operationId: CreateRecord
+#consumes:
+#  - application/json
 #produces:
-#- text/plain
+#  - text/plain
+#  - application/json
+#security:
+#  - Cookie: []
 #parameters:
 #- in: body
-#  description: dto for record
-#  name: AdminRecordDTO
+#  description: body to create record
+#  name: Record
 #  required: true
 #  schema:
-#    "$ref": "#/definitions/models.Record"
+#     $ref: '#/definitions/models.dtos.RecordDTO'
 #responses:
 #  '200':
-#    description: success
+#    description: Successfully created
 #  '412':
 #    description: No json passed
-#  '417':
-#    description: Wrong Credentials
 #  '422':
-#    description: Wrong json passed
+#    description: Wrong json
 #  '500':
 #    description: Internal server error
 ###
-POST        /api/record/create        controllers.RecordController.create
+POST        /api/record/create           controllers.RecordController.create
+
 
 ###
 #tags:
 #- Record
-#summary: Get Email
-#operationId: RecordGet
-#consumes: application/text
+#summary: Get record by id
+#operationId: RecordGetById
 #produces:
-#- application/text
+#  - text/plain
+#  - application/json
+#security:
+#  - Cookie: []
 #responses:
 #  '200':
-#    description: Success
-#  '406':
-#   description: Token expired
+#    description: record
+#    schema:
+#      "$ref": "#/definitions/models.Record"
+#  '401':
+#    description: Unauthorized
+#  '404':
+#    description: Not found
 #  '500':
 #    description: Internal server error
 ###
-GET         /api/record/:id      controllers.RecordController.get(id)
+GET         /api/record/:id            controllers.RecordController.getById(id: String)
 
+###
+#tags:
+#- Record
+#summary: Get user's recordss
+#operationId: RecordsGetByUser
+#produces:
+#  - text/plain
+#  - application/json
+#security:
+#  - Cookie: []
+#responses:
+#  '200':
+#    description: record
+#    schema:
+#      "$ref": "#/definitions/models.Record"
+#  '401':
+#    description: Unauthorized
+#  '404':
+#    description: Not found
+#  '500':
+#    description: Internal server error
+###
+GET         /api/record/user/:id            controllers.RecordController.getByUser(id: Long)
+
+###
+#tags:
+#- Record
+#summary: Update record
+#operationId: UpdateRecord
+#parameters:
+#- in: body
+#  description: record
+#  name: Record
+#  required: true
+#  schema:
+#     $ref: '#/definitions/models.dtos.RecordDTO'
+#security:
+#  - Cookie: []
+#responses:
+#  '200':
+#    description: Successfully updated
+#  '412':
+#    description: No json passed
+#  '422':
+#    description: Wrong json
+#  '500':
+#    description: Internal server error
+###
+PATCH         /api/record/update/:id            controllers.RecordController.update(id: String)
+
+###
+#tags:
+#- Record
+#summary: Delete record
+#operationId: DeleteRecord
+#security:
+#  - Cookie: []
+#responses:
+#  '200':
+#    description: Successfully deleted
+#  '412':
+#    description: No json passed
+#  '422':
+#    description: Wrong json
+#  '500':
+#    description: Internal server error
+###
+DELETE         /api/record/delete/:id            controllers.RecordController.delete(id: String)
 
 
 ### NoDocs ###
