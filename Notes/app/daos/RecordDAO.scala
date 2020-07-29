@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 trait RecordDAO {
 
-  def create(record: Record): Task[WriteResult]
+  def create(record: Record): Task[Option[Int]]
 
   def getById(id: UUID): Task[Option[Record]]
 

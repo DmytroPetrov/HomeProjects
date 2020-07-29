@@ -11,7 +11,7 @@ trait RecordService {
 
   def getByUser(userId: Long): Task[Seq[Record]]
 
-  def create(owner: User, recordDTO: RecordDTO): Task[WriteResult]
+  def create(owner: User, recordDTO: RecordDTO): Task[Option[Int]]
 
   def getById(recordId: UUID): Task[Record]
 

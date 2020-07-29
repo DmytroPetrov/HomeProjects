@@ -13,7 +13,7 @@ import services.RecordService
 
 class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extends RecordService {
 
-  override def create(owner: User, recordDTO: RecordDTO): Task[WriteResult] = ifActiveUserExist(owner.id).flatMap {
+  override def create(owner: User, recordDTO: RecordDTO): Task[Option[Int]] = ifActiveUserExist(owner.id).flatMap {
     case false => Task.raiseError(UnauthorizedException)
     case true => recordDAO.create(recordDTO.toRecord(owner.id))
   }

@@ -23,10 +23,10 @@ class RecordDAOImpl @Inject()(implicit ec: ExecutionContext,
 
   private def recordCollection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("record"))
 
-  override def create(record: Record): Task[WriteResult] = recordCollection.flatMap {
+  override def create(record: Record): Task[Option[Int]] = recordCollection.flatMap {
     _.insert.one(
       record.copy(_id = UUID.randomUUID())
-    )
+    ).map(_.code)
   }.wrapEx
 
   override def getById(id: UUID): Task[Option[Record]] = recordCollection.flatMap {
