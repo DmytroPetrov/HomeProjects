@@ -28,7 +28,6 @@ class RecordControllerTest extends PlaySpec with MockFactory with AsyncUtils wit
 
   private val userServiceMock = mock[UserService]
   private val recordServiceMock = mock[RecordService]
-  private val recordDTOMock = mock[RecordDTO]
   private val controller = new RecordController(stubControllerComponents(), userServiceMock, recordServiceMock)
 
   val recordDTO: RecordDTO = RecordDTO("Lorem", "ipsum", false)
