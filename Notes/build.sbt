@@ -26,6 +26,7 @@ libraryDependencies ++= Seq(
   "com.github.t3hnar" %% "scala-bcrypt" % "4.1",
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
   "org.scalamock" %% "scalamock" % "4.4.0" % Test,
+  "org.reactivemongo" %% "play2-reactivemongo" % "1.0.0-play27-rc.2",
 )
 
 swaggerDomainNameSpaces := Seq("model")

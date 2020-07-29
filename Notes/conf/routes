@@ -106,6 +106,58 @@ GET         /api/auth/confirm_email/:token       controllers.AuthController.conf
 ###
 POST        /api/auth/signup        controllers.AuthController.signUp
 
+# ======================================================================================================================
+# ================================================== A U T H ===========================================================
+# ======================================================================================================================
+
+###
+#tags:
+#- Record
+#summary: Create Record
+#operationId: RecordCreate
+#consumes: application/json
+#produces:
+#- text/plain
+#parameters:
+#- in: body
+#  description: dto for record
+#  name: AdminRecordDTO
+#  required: true
+#  schema:
+#    "$ref": "#/definitions/models.Record"
+#responses:
+#  '200':
+#    description: success
+#  '412':
+#    description: No json passed
+#  '417':
+#    description: Wrong Credentials
+#  '422':
+#    description: Wrong json passed
+#  '500':
+#    description: Internal server error
+###
+POST        /api/record/create        controllers.RecordController.create
+
+###
+#tags:
+#- Record
+#summary: Get Email
+#operationId: RecordGet
+#consumes: application/text
+#produces:
+#- application/text
+#responses:
+#  '200':
+#    description: Success
+#  '406':
+#   description: Token expired
+#  '500':
+#    description: Internal server error
+###
+GET         /api/record/:id      controllers.RecordController.get(id)
+
+
 
 ### NoDocs ###
 GET           /docs/swagger-ui/*file                 controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)

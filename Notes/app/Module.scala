@@ -6,8 +6,8 @@ import daos.slick.{EmailTokenDAOImpl, UserDAOImpl}
 import monix.execution.Scheduler
 import services.helpers.{TimeHelper, TokenHelper}
 import services.helpers.impl.{RealTimeHelper, TokenHelperImpl}
-import services.impl.{AuthServiceImpl, EmailTokenServiceImpl, MailerServiceImpl, UserServiceImpl}
-import services.{ApplicationTimer, AtomicCounter, AuthService, Counter, EmailTokenService, MailerService, UserService}
+import services.impl.{AuthServiceImpl, EmailTokenServiceImpl, MailerServiceImpl, RecordServiceImpl, UserServiceImpl}
+import services.{ApplicationTimer, AtomicCounter, AuthService, Counter, EmailTokenService, MailerService, RecordService, UserService}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -29,6 +29,7 @@ class Module extends AbstractModule {
     bind(classOf[MailerService]).to(classOf[MailerServiceImpl])
     bind(classOf[AuthService]).to(classOf[AuthServiceImpl])
     bind(classOf[EmailTokenService]).to(classOf[EmailTokenServiceImpl])
+    bind(classOf[RecordService]).to(classOf[RecordServiceImpl])
     // Ask Guice to create an instance of ApplicationTimer when the
     // application starts.
     bind(classOf[ApplicationTimer]).asEagerSingleton()
