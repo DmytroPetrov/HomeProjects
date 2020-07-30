@@ -1,13 +1,14 @@
 import com.google.inject.AbstractModule
 import java.time.Clock
 
+import daos.reactivemongo.RecordDAOImpl
 import daos.{EmailTokenDAO, RecordDAO, UserDAO}
-import daos.slick.{EmailTokenDAOImpl, RecordDAOImpl, UserDAOImpl}
+import daos.slick.{EmailTokenDAOImpl, UserDAOImpl}
 import monix.execution.Scheduler
 import services.helpers.{TimeHelper, TokenHelper}
 import services.helpers.impl.{RealTimeHelper, TokenHelperImpl}
 import services.impl.{AuthServiceImpl, EmailTokenServiceImpl, MailerServiceImpl, RecordServiceImpl, UserServiceImpl}
-import services.{ApplicationTimer, AtomicCounter, AuthService, Counter, EmailTokenService, MailerService, RecordService, UserService}
+import services.{ApplicationTimer, AuthService, EmailTokenService, MailerService, RecordService, UserService}
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -38,7 +39,6 @@ class Module extends AbstractModule {
     bind(classOf[RecordDAO]).to(classOf[RecordDAOImpl])
 
     // Set AtomicCounter as the implementation for Counter.
-    bind(classOf[Counter]).to(classOf[AtomicCounter])
     bind(classOf[TimeHelper]).to(classOf[RealTimeHelper])
     bind(classOf[TokenHelper]).to(classOf[TokenHelperImpl])
   }

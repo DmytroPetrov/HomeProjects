@@ -1,4 +1,4 @@
-package daos.slick
+package daos.reactivemongo
 
 import java.util.UUID
 
@@ -9,7 +9,6 @@ import monix.eval.Task
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.bson.BSONDocument
 import reactivemongo.api.bson.collection.BSONCollection
-import reactivemongo.api.commands.WriteResult
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -17,8 +16,8 @@ class RecordDAOImpl @Inject()(implicit ec: ExecutionContext,
                               reactiveMongoApi: ReactiveMongoApi)
   extends RecordDAO {
 
-  import reactivemongo.play.json.compat
   import daos.slick.helper.Helpers._
+  import reactivemongo.play.json.compat
   import compat.json2bson._
 
   private def recordCollection: Future[BSONCollection] = reactiveMongoApi.database.map(_.collection("record"))

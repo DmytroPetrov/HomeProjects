@@ -3,16 +3,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-# An example controller showing how to use dependency injection
-GET     /count                      controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET     /message                    controllers.AsyncController.message
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
 # ======================================================================================================================
 # ================================================== A U T H ===========================================================
 # ======================================================================================================================
@@ -132,6 +122,8 @@ POST        /api/auth/signup        controllers.AuthController.signUp
 #responses:
 #  '200':
 #    description: Successfully created
+#  '401':
+#    description: Unauthorized
 #  '412':
 #    description: No json passed
 #  '422':
@@ -207,6 +199,10 @@ GET         /api/record/user/:id            controllers.RecordController.getByUs
 #responses:
 #  '200':
 #    description: Successfully updated
+#  '401':
+#    description: Unauthorized
+#  '404':
+#    description: Not found
 #  '412':
 #    description: No json passed
 #  '422':
@@ -226,10 +222,10 @@ PATCH         /api/record/update/:id            controllers.RecordController.upd
 #responses:
 #  '200':
 #    description: Successfully deleted
-#  '412':
-#    description: No json passed
-#  '422':
-#    description: Wrong json
+#  '401':
+#    description: Unauthorized
+#  '404':
+#    description: Not found
 #  '500':
 #    description: Internal server error
 ###
@@ -238,3 +234,5 @@ DELETE         /api/record/delete/:id            controllers.RecordController.de
 
 ### NoDocs ###
 GET           /docs/swagger-ui/*file                 controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+### NoDocs ###
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

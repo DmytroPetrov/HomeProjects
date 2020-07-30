@@ -3,9 +3,11 @@ package controllers
 import java.util.UUID
 
 import controllers.filters.ControllerUtils
+import exceptions.Exceptions.NotFoundException
 import javax.inject.Inject
 import models.Record
 import models.dtos.RecordDTO
+import monix.eval.Task
 import monix.execution.Scheduler
 import play.api.libs.json.{JsArray, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -28,17 +30,17 @@ class RecordController @Inject()(cc:ControllerComponents, userService: UserServi
   }
 
   def getById(id: String): Action[AnyContent] = userAction {
-    recordService.getById(UUID.fromString(id)).map { record =>
+    recordService.getById(id).map { record =>
       Ok(record.toJson)
     }
   }
 
   def update(id: String): Action[AnyContent] = userActionWithJson(RecordDTO.form) { request =>
-    recordService.update(request.user, request.parsedBody, UUID.fromString(id)).map(_ => Ok)
+    recordService.update(request.user, request.parsedBody, id).map(_ => Ok)
   }
 
   def delete(id: String): Action[AnyContent] = userAction { request =>
-    recordService.delete(request.user, UUID.fromString(id)).map(_ => Ok)
+    recordService.delete(request.user, id).map(_ => Ok)
   }
 
 }
