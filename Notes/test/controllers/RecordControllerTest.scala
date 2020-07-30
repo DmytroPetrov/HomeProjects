@@ -69,7 +69,7 @@ class RecordControllerTest extends PlaySpec with MockFactory with AsyncUtils wit
   "getById" should {
     "return Ok(record)" in {
       (userServiceMock.getById _).expects(activeUser.id).returns(Task.now(Some(activeUser)))
-      (recordServiceMock.getById _).expects(record._id).returns(Task.now(record))
+      (recordServiceMock.getById _).expects(record._id.toString).returns(Task.now(record))
       controller.getById(record._id.toString).apply(emptyRequestWithSession).get mustBe Ok(Json.toJson(record))
     }
   }
@@ -86,7 +86,7 @@ class RecordControllerTest extends PlaySpec with MockFactory with AsyncUtils wit
     "return Ok" in {
       val request = fakeChartRequest(record, "PATCH")
       (userServiceMock.getById _).expects(activeUser.id).returns(Task.now(Some(activeUser)))
-      (recordServiceMock.update(_: User, _: RecordDTO, _: UUID)).expects(activeUser, recordDTO, record._id).returns(Task.now(true))
+      (recordServiceMock.update(_: User, _: RecordDTO, _: String)).expects(activeUser, recordDTO, record._id.toString).returns(Task.now(true))
       controller.update(record._id.toString).apply(request).get mustBe Ok
     }
   }
@@ -94,7 +94,7 @@ class RecordControllerTest extends PlaySpec with MockFactory with AsyncUtils wit
   "delete" should {
     "return Ok" in {
       (userServiceMock.getById _).expects(activeUser.id).returns(Task.now(Some(activeUser)))
-      (recordServiceMock.delete(_: User, _: UUID)).expects(activeUser, record._id).returns(Task.now(true))
+      (recordServiceMock.delete(_: User, _: String)).expects(activeUser, record._id.toString).returns(Task.now(true))
       controller.delete(record._id.toString).apply(emptyRequestWithSession).get mustBe Ok
     }
   }

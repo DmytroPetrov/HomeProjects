@@ -13,10 +13,10 @@ trait RecordService {
 
   def create(owner: User, recordDTO: RecordDTO): Task[Option[Int]]
 
-  def getById(recordId: UUID): Task[Record]
+  def getById(recordId: String): Task[Record]
 
-  def update(currentUser: User, recordDTO: RecordDTO, recordId: UUID): Task[Boolean]
+  def update(currentUser: User, recordDTO: RecordDTO, recordId: String): Task[Boolean]
 
-  def delete(currentUser: User, recordId: UUID): Task[Boolean]
+  def delete(currentUser: User, recordId: String): Task[Boolean]
 
 }

@@ -8,7 +8,6 @@ import javax.inject.Inject
 import models.{Record, User}
 import models.dtos.RecordDTO
 import monix.eval.Task
-import reactivemongo.api.commands.WriteResult
 import services.RecordService
 
 class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extends RecordService {
@@ -23,15 +22,17 @@ class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extend
     case true => recordDAO.getByUser(userId)
   }
 
-  override def getById(recordId: UUID): Task[Record] = get(recordId)
+  override def getById(recordId: String): Task[Record] = get(getUUID(recordId))
 
-  override def update(currentUser: User, recordDTO: RecordDTO, recordId: UUID): Task[Boolean] =
-    ifExistAndOwner(currentUser.id, recordId) {
-      existing => recordDAO.update(recordId, existing.updateFrom(recordDTO.toRecord(currentUser.id))).map(_ => true)
+  override def update(currentUser: User, recordDTO: RecordDTO, recordId: String): Task[Boolean] =
+    ifExistAndOwner(currentUser.id, recordId) { existing =>
+      getUUID(recordId).flatMap(id =>
+        recordDAO.update(id, existing.updateFrom(recordDTO.toRecord(currentUser.id))).map(_ => true)
+      )
     }
 
-  override def delete(currentUser: User, recordId: UUID): Task[Boolean] = ifExistAndOwner(currentUser.id, recordId) {
-    _ => recordDAO.delete(recordId).map(_ => true)
+  override def delete(currentUser: User, recordId: String): Task[Boolean] = ifExistAndOwner(currentUser.id, recordId) {
+    _ => getUUID(recordId).flatMap(id => recordDAO.delete(id).map(_ => true))
   }
 
   private def ifActiveUserExist(id: Long): Task[Boolean] = {
@@ -42,16 +43,24 @@ class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extend
     }
   }
 
-  private def get(recordId: UUID): Task[Record] = recordDAO.getById(recordId).flatMap {
-    case None => Task.raiseError(NotFoundException("Record", s"with id = $recordId"))
-    case Some(rec) => Task.now(rec)
+  private def get(recordId: Task[UUID]): Task[Record] = recordId.flatMap {
+    id =>
+      recordDAO.getById(id).flatMap {
+        case None => Task.raiseError(NotFoundException("Record", s"with id = $recordId"))
+        case Some(rec) => Task.now(rec)
+      }
   }
 
-  private def ifExistAndOwner[T](ownerId: Long, chartId: UUID)(block: Record => Task[T]): Task[T] =
-    get(chartId).flatMap {
-      case rec if rec.ownerId != ownerId => throw ForbiddenException("No rights to change record")
+  private def ifExistAndOwner[T](ownerId: Long, recordId: String)(block: Record => Task[T]): Task[T] =
+    get(getUUID(recordId)).flatMap {
+      case rec if rec.ownerId != ownerId => Task.raiseError(ForbiddenException("No rights to change record"))
       case rec => block(rec)
     }
 
+  private def getUUID(id: String): Task[UUID] = try {
+    Task.now(UUID.fromString(id))
+  } catch {
+    case _: Throwable => Task.raiseError(NotFoundException("Record", s"with id = $id"))
+  }
 
 }

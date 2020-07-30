@@ -1,5 +1,5 @@
 swagger: "2.0"
-host: "localhost:9000"
+host: "1aa1d8495af6.ngrok.io"
 consumes:
   - application/json
   - application/text

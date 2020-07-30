@@ -4,9 +4,7 @@ import java.util.UUID
 
 import models.Record
 import monix.eval.Task
-import reactivemongo.api.commands.WriteResult
 
-import scala.concurrent.Future
 
 trait RecordDAO {
 
