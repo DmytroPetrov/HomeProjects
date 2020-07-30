@@ -1,19 +1,14 @@
 package controllers
 
-import java.util.UUID
-
 import controllers.filters.ControllerUtils
-import exceptions.Exceptions.NotFoundException
 import javax.inject.Inject
-import models.Record
 import models.dtos.RecordDTO
-import monix.eval.Task
 import monix.execution.Scheduler
-import play.api.libs.json.{JsArray, Json}
+import play.api.libs.json.JsArray
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.{RecordService, UserService}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class RecordController @Inject()(cc:ControllerComponents, userService: UserService, recordService: RecordService)
                                 (implicit ex: ExecutionContext, sc: Scheduler) extends ControllerUtils(cc, userService) {

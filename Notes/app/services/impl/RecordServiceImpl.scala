@@ -8,7 +8,6 @@ import javax.inject.Inject
 import models.{Record, User}
 import models.dtos.RecordDTO
 import monix.eval.Task
-import reactivemongo.api.commands.WriteResult
 import services.RecordService
 
 class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extends RecordService {
@@ -44,11 +43,12 @@ class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extend
     }
   }
 
-  private def get(recordId: Task[UUID]): Task[Record] = recordId.flatMap{
-    case id => recordDAO.getById(id).flatMap {
-      case None => Task.raiseError(NotFoundException("Record", s"with id = $recordId"))
-      case Some(rec) => Task.now(rec)
-    }
+  private def get(recordId: Task[UUID]): Task[Record] = recordId.flatMap {
+    id =>
+      recordDAO.getById(id).flatMap {
+        case None => Task.raiseError(NotFoundException("Record", s"with id = $recordId"))
+        case Some(rec) => Task.now(rec)
+      }
   }
 
   private def ifExistAndOwner[T](ownerId: Long, recordId: String)(block: Record => Task[T]): Task[T] =
@@ -60,7 +60,7 @@ class RecordServiceImpl @Inject()(recordDAO: RecordDAO, userDAO: UserDAO) extend
   private def getUUID(id: String): Task[UUID] = try {
     Task.now(UUID.fromString(id))
   } catch {
-    case er: Throwable => Task.raiseError(NotFoundException("Record", s"with id = $id"))
+    case _: Throwable => Task.raiseError(NotFoundException("Record", s"with id = $id"))
   }
 
 }

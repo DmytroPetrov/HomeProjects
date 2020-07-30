@@ -10,7 +10,6 @@ import monix.eval.Task
 import monix.execution.Scheduler
 import org.scalamock.scalatest.MockFactory
 import org.scalatestplus.play.PlaySpec
-import reactivemongo.api.commands.WriteResult
 import services.helpers.TimeHelper
 import testUtils.{AsyncUtils, TestDataUtils}
 
@@ -43,12 +42,12 @@ class RecordServiceImplTest extends PlaySpec with MockFactory with AsyncUtils wi
   "getById" should {
     "return chart by id" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(Some(record)))
-      service.getById(record._id).get mustBe record
+      service.getById(record._id.toString).get mustBe record
     }
 
     "raise NotFoundException" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(None))
-      a[NotFoundException] should be thrownBy service.getById(record._id).get
+      a[NotFoundException] should be thrownBy service.getById(record._id.toString).get
     }
 
   }
@@ -76,17 +75,17 @@ class RecordServiceImplTest extends PlaySpec with MockFactory with AsyncUtils wi
     "return true" in {
       (recordDAOMock.update _).expects(record._id, record).returns(Task.now(Some(record)))
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(Some(record)))
-      service.update(activeUser, recordDTO, record._id).get mustBe true
+      service.update(activeUser, recordDTO, record._id.toString).get mustBe true
     }
 
     "user tries to change foreign chart" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(Some(record)))
-      a[ForbiddenException] should be thrownBy service.update(foreignUser, recordDTO, record._id).get
+      a[ForbiddenException] should be thrownBy service.update(foreignUser, recordDTO, record._id.toString).get
     }
 
     "chart is not exist" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(None))
-      a[NotFoundException] should be thrownBy service.update(activeUser, recordDTO, record._id).get
+      a[NotFoundException] should be thrownBy service.update(activeUser, recordDTO, record._id.toString).get
     }
   }
 
@@ -94,17 +93,17 @@ class RecordServiceImplTest extends PlaySpec with MockFactory with AsyncUtils wi
     "return true" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(Some(record)))
       (recordDAOMock.delete _).expects(record._id).returns(Task.now(Some(record)))
-      service.delete(activeUser, record._id).get mustBe true
+      service.delete(activeUser, record._id.toString).get mustBe true
     }
 
     "user tries to delete foreign chart" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(Some(record)))
-      a[ForbiddenException] should be thrownBy service.delete(foreignUser, record._id).get
+      a[ForbiddenException] should be thrownBy service.delete(foreignUser, record._id.toString).get
     }
 
     "chart is not exist" in {
       (recordDAOMock.getById _).expects(record._id).returns(Task.now(None))
-      a[NotFoundException] should be thrownBy service.delete(activeUser, record._id).get
+      a[NotFoundException] should be thrownBy service.delete(activeUser, record._id.toString).get
     }
   }
 
